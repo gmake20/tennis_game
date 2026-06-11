@@ -46,8 +46,8 @@ public class GameScore implements Scorable, Displayable {
     }
 
     public int getAdvantageTeam() {
-        if (!isTiebreak && points[team] >= 3 && points[Team.TEAM_B] >= 3 && Math.abs(points[team] - points[Team.TEAM_B]) == 1) {
-            return points[team] > points[Team.TEAM_B] ? team : Team.TEAM_B;
+        if (!isTiebreak && points[Team.TEAM_A] >= 3 && points[Team.TEAM_B] >= 3 && Math.abs(points[Team.TEAM_A] - points[Team.TEAM_B]) == 1) {
+            return points[Team.TEAM_A] > points[Team.TEAM_B] ? 1 : 2;
         }
         return 0;
     }   
