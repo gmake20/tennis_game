@@ -1,10 +1,10 @@
 package tennis_game;
 
 public class SetScore implements Scorable, Displayable {
-    private int[] games = {0, 0};
+    private int[] games = { 0, 0 };
     private GameScore currentGame;
     private boolean setOver;
-	private int setWinner;	// Team.TEAM_A, Team.TEAM_B
+    private int setWinner; // Team.TEAM_A, Team.TEAM_B
     private int tiebreakWinnerScore;
     private boolean wasTiebreak;
 
@@ -14,8 +14,9 @@ public class SetScore implements Scorable, Displayable {
 
     @Override
     public void pointWinner(int p) {
-    	
-        if (setOver) return;
+
+        if (setOver)
+            return;
         currentGame.pointWinner(p);
         if (currentGame.isOver()) {
             games[currentGame.getWinner()]++;
@@ -73,14 +74,6 @@ public class SetScore implements Scorable, Displayable {
 
     public boolean wasTiebreak() {
         return wasTiebreak;
-    }
-
-    public void setTiebreakWinnerScore(int score) {
-        tiebreakWinnerScore = score;
-    }
-
-    public int getTiebreakWinnerScore() {
-        return tiebreakWinnerScore;
     }
 
     @Override

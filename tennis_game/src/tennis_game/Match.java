@@ -31,9 +31,6 @@ public class Match implements Scorable, Displayable {
             return;
         currentSet.pointWinner(p);
         if (currentSet.isOver()) {
-            if (currentSet.wasTiebreak()) {
-                currentSet.setTiebreakWinnerScore(currentSet.getCurrentGame().getRawPoint(currentSet.getWinner()));
-            }
             setHistory[completedSets++] = currentSet;
             setsWon[currentSet.getWinner()]++;
             if (setsWon[0] >= setsToWin || setsWon[1] >= setsToWin) {
@@ -131,7 +128,6 @@ public class Match implements Scorable, Displayable {
                 int[] g = setHistory[s].getGames();
                 String cell;
                 if (setHistory[s].wasTiebreak()) {
-                   //  int tbScore = setHistory[s].getTiebreakWinnerScore();
                     int tbScore = setHistory[s].getCurrentGame().getRawPoint(t);
                     cell = (t == setHistory[s].getWinner())
                             ? String.format("  7(%d)", tbScore)
@@ -174,7 +170,7 @@ public class Match implements Scorable, Displayable {
                 int loserTb = setHistory[s].getCurrentGame().getRawPoint(1 - setHistory[s].getWinner());
                 sb.append("7-6(").append(loserTb).append(")");
             } else {
-                sb.append(g[0]).append("-").append(g[1]);
+                sb.append(g[Team.TEAM_A]).append("-").append(g[Team.TEAM_B]);
             }
         }
         return sb.toString();
