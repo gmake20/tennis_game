@@ -47,7 +47,7 @@ public class Match implements Scorable, Displayable {
 
     public void simulate(GameInput input, GameOutput output) {
         while (!matchOver) {
-        	// TODO Finish : 1,2 대신에 TEAM_A, TEAM_B로 변경할것 : 수정완료함 (신창만)
+            // TODO Finish : 1,2 대신에 TEAM_A, TEAM_B로 변경할것 : 수정완료함 (신창만)
             int p = Math.random() < 0.5 ? Team.TEAM_A : Team.TEAM_B;
             pointWinner(p);
             // TODO Finish: 경기 결과 표시 : 수정완료함 (신창만)
@@ -69,7 +69,7 @@ public class Match implements Scorable, Displayable {
     }
 
     @Override
-	public String dispScoreBoard() {
+    public String dispScoreBoard() {
         if (matchOver) {
             return display();
         }
@@ -96,8 +96,8 @@ public class Match implements Scorable, Displayable {
         sb.append("\n");
         if (currentSet.wasTiebreak()) {
             sb.append(String.format("현재 세트: Tie-break  |  %s %d - %s %d%n",
-                    teams[0].getDisplayName(), game.getRawPoint(1),
-                    teams[1].getDisplayName(), game.getRawPoint(2)));
+                    teams[0].getDisplayName(), game.getRawPoint(Team.TEAM_A),
+                    teams[1].getDisplayName(), game.getRawPoint(Team.TEAM_B)));
         } else if (game.isDeuceState()) {
             sb.append("현재 게임 포인트: Deuce\n");
         } else if (game.getAdvantageTeam() != 0) {
@@ -132,7 +132,7 @@ public class Match implements Scorable, Displayable {
                 String cell;
                 if (setHistory[s].wasTiebreak()) {
                     int tbScore = setHistory[s].getTiebreakWinnerScore();
-                    cell = (t == setHistory[s].getWinner() - 1)
+                    cell = (t == setHistory[s].getWinner())
                             ? "  7   "
                             : String.format("  6(%d)", tbScore);
                 } else {
@@ -144,7 +144,8 @@ public class Match implements Scorable, Displayable {
         }
 
         sb.append(String.format("%n최종 승자: %s (%d - %d)%n",
-                teams[winner - 1].getDisplayName(), setsWon[winner - 1], setsWon[2 - winner]));
+                teams[winner].getDisplayName(), setsWon[winner], setsWon[1 - winner]));
+
         sb.append("================================\n");
         return sb.toString();
     }
@@ -157,7 +158,7 @@ public class Match implements Scorable, Displayable {
         sb.append("TEAM1=").append(teams[0].getDisplayName()).append("\n");
         sb.append("TEAM2=").append(teams[1].getDisplayName()).append("\n");
         sb.append("SCORE=").append(buildScoreString()).append("\n");
-        sb.append("WINNER=").append(teams[winner - 1].getDisplayName()).append("\n");
+        sb.append("WINNER=").append(teams[winner].getDisplayName()).append("\n");
         sb.append("---").append("\n");
         return sb.toString();
     }
@@ -169,8 +170,7 @@ public class Match implements Scorable, Displayable {
                 sb.append(",");
             int[] g = setHistory[s].getGames();
             if (setHistory[s].wasTiebreak()) {
-                int loserTb = setHistory[s].getWinner() == 1 ? setHistory[s].getCurrentGame().getRawPoint(2)
-                        : setHistory[s].getCurrentGame().getRawPoint(1);
+                int loserTb = setHistory[s].getCurrentGame().getRawPoint(1 - setHistory[s].getWinner());
                 sb.append("7-6(").append(loserTb).append(")");
             } else {
                 sb.append(g[0]).append("-").append(g[1]);
