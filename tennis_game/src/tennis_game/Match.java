@@ -30,7 +30,6 @@ public class Match implements Scorable, Displayable {
         if (matchOver) return;
         currentSet.pointWinner(p);
         if (currentSet.isOver()) {
-            // capture tiebreak loser score before saving
             if (currentSet.wasTiebreak()) {
                 currentSet.setTiebreakWinnerScore(currentSet.getCurrentGame().getRawPoint(currentSet.getWinner()));
             }
@@ -63,19 +62,60 @@ public class Match implements Scorable, Displayable {
     }
 
     @Override
-    public void display() {
-        System.out.println("================================");
-        System.out.println("경기 종료");
-        System.out.printf("경기 방식: %d세트 %s%n%n", totalSets, matchType);
+    public String dispScoreBoard() {
+        if (matchOver) {
+            return display();
+        }
 
-        // header
+        StringBuilder sb = new StringBuilder();
+        sb.append("================================\n");
+        sb.append("현재 스코어보드\n");
+        sb.append(String.format("경기 방식: %d세트 %s%n%n", totalSets, matchType));
+
+        String label = matchType.equals("복식") ? "팀" : "선수";
+        GameScore game = currentSet.getCurrentGame();
+        int[] setGames = currentSet.getGames();
+
+        sb.append(String.format("%-28s  세트  게임  현재 게임 포인트%n", label));
+        for (int t = 0; t < 2; t++) {
+            int team = t + 1;
+            String pointStr = currentSet.wasTiebreak()
+                    ? String.valueOf(game.getRawPoint(team))
+                    : game.getPointDisplay(team);
+            sb.append(String.format("%-28s  %2d    %2d    %s%n",
+                    teams[t].getDisplayName(), setsWon[t], setGames[t], pointStr));
+        }
+
+        sb.append("\n");
+        if (currentSet.wasTiebreak()) {
+            sb.append(String.format("현재 세트: Tie-break  |  %s %d - %s %d%n",
+                    teams[0].getDisplayName(), game.getRawPoint(1),
+                    teams[1].getDisplayName(), game.getRawPoint(2)));
+        } else if (game.isDeuceState()) {
+            sb.append("현재 게임 포인트: Deuce\n");
+        } else if (game.getAdvantageTeam() != 0) {
+            sb.append(String.format("현재 게임 포인트: Advantage %s%n",
+                    teams[game.getAdvantageTeam() - 1].getDisplayName()));
+        }
+
+        sb.append("================================\n");
+        return sb.toString();
+    }
+
+    @Override
+    public String display() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("================================\n");
+        sb.append("경기 종료\n");
+        sb.append(String.format("경기 방식: %d세트 %s%n%n", totalSets, matchType));
+
         String label = matchType.equals("복식") ? "팀" : "선수";
         StringBuilder header = new StringBuilder();
         header.append(String.format("%-28s  세트", label));
         for (int i = 0; i < completedSets; i++) {
             header.append(String.format("   %d세트", i + 1));
         }
-        System.out.println(header);
+        sb.append(header).append("\n");
 
         for (int t = 0; t < 2; t++) {
             StringBuilder row = new StringBuilder();
@@ -85,22 +125,21 @@ public class Match implements Scorable, Displayable {
                 String cell;
                 if (setHistory[s].wasTiebreak()) {
                     int tbScore = setHistory[s].getTiebreakWinnerScore();
-                    if (t == setHistory[s].getWinner() - 1) {
-                        cell = String.format("  7   ");
-                    } else {
-                        cell = String.format("  6(%d)", tbScore);
-                    }
+                    cell = (t == setHistory[s].getWinner() - 1)
+                            ? "  7   "
+                            : String.format("  6(%d)", tbScore);
                 } else {
                     cell = String.format("  %2d  ", g[t]);
                 }
                 row.append(cell);
             }
-            System.out.println(row);
+            sb.append(row).append("\n");
         }
 
-        System.out.printf("%n최종 승자: %s (%d - %d)%n",
-                teams[winner - 1].getDisplayName(), setsWon[winner - 1], setsWon[2 - winner]);
-        System.out.println("================================");
+        sb.append(String.format("%n최종 승자: %s (%d - %d)%n",
+                teams[winner - 1].getDisplayName(), setsWon[winner - 1], setsWon[2 - winner]));
+        sb.append("================================\n");
+        return sb.toString();
     }
 
     public String toRecord() {

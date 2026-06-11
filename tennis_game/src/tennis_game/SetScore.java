@@ -1,6 +1,6 @@
 package tennis_game;
 
-public class SetScore implements Scorable {
+public class SetScore implements Scorable, Displayable {
     private int[] games = {0, 0};
     private GameScore currentGame;
     private boolean setOver;
@@ -80,5 +80,16 @@ public class SetScore implements Scorable {
 
     public int getTiebreakWinnerScore() {
         return tiebreakWinnerScore;
+    }
+
+    @Override
+    public String dispScoreBoard() {
+        return String.format("[세트 스코어]  %d - %d%n", games[0], games[1])
+                + currentGame.dispScoreBoard();
+    }
+
+    @Override
+    public String display() {
+        return dispScoreBoard();
     }
 }

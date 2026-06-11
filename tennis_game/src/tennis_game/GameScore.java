@@ -1,6 +1,6 @@
 package tennis_game;
 
-public class GameScore implements Scorable {
+public class GameScore implements Scorable, Displayable {
     private int[] points = {0, 0};
     private boolean isTiebreak;
     private boolean gameOver;
@@ -75,5 +75,25 @@ public class GameScore implements Scorable {
 
     public int getRawPoint(int team) {
         return points[team - 1];
+    }
+
+    @Override
+    public String dispScoreBoard() {
+        StringBuilder sb = new StringBuilder("[현재 게임 포인트]  ");
+        if (isTiebreak) {
+            sb.append(String.format("%d - %d  (Tie-break)%n", points[0], points[1]));
+        } else if (isDeuceState()) {
+            sb.append("Deuce\n");
+        } else if (getAdvantageTeam() != 0) {
+            sb.append(getAdvantageTeam() == 1 ? "Adv - 40\n" : "40 - Adv\n");
+        } else {
+            sb.append(String.format("%s - %s%n", getPointDisplay(1), getPointDisplay(2)));
+        }
+        return sb.toString();
+    }
+
+    @Override
+    public String display() {
+        return dispScoreBoard();
     }
 }

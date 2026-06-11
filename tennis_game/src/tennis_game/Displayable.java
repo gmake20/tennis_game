@@ -1,5 +1,6 @@
 package tennis_game;
 
 public interface Displayable {
-    void display();
+    String dispScoreBoard();
+    String display();
 }
