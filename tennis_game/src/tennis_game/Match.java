@@ -3,17 +3,17 @@ package tennis_game;
 import java.time.LocalDate;
 
 public class Match implements Scorable, Displayable {
-    private int totalSets;
-    private int setsToWin;
-    private String matchType;
-    private Team[] teams;
-    private int[] setsWon = { 0, 0 };
-    private SetScore[] setHistory;
-    private SetScore currentSet;
-    private boolean matchOver;
-    private int winner;
-    private String date;
-    private int completedSets;
+    private int totalSets;          // 경기 세트 수. 사용자가 선택한 3 또는 5
+    private int setsToWin;          // 승리에 필요한 세트 수. totalSets / 2 + 1 로 계산 (3세트면 2, 5세트면 3)
+    private String matchType;       // 경기 방식. "단식" 또는 "복식"
+    private Team[] teams;             // 참가 팀. 단식: Team[2], 복식: Team[2]  
+    private int[] setsWon = { 0, 0 }; // 각 팀의 세트 승리 횟수
+    private SetScore[] setHistory;    // 세트 결과 기록 배열
+    private SetScore currentSet;      // 현재 진행 중인 세트
+    private boolean matchOver;        // 경기 종료 여부
+    private int winner;               // 최종 승자 Team.TEAM_A 또는 Team.TEAM_B
+    private String date;              // 경기 날짜
+    private int completedSets;        // 완료된 세트 수
 
     public Match(int totalSets, String matchType, Team[] teams) {
         this.totalSets = totalSets;
