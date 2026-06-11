@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class TennisManager {
-	private final RecordStorage storage = new RecordStorage();
+	private final RecordStorage storage;
 	private final GameInput input;
 	private final GameOutput output;
 
@@ -12,6 +12,8 @@ public class TennisManager {
 	private List<Match> matchHistory = new ArrayList<>();
 
 	public TennisManager(GameInput input, GameOutput output) {
+		storage = new FileRecordStorage();
+				
 		this.input = input;
 		this.output = output;
 		playerRoster.add(new Player("양인석"));
