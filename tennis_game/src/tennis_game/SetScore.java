@@ -5,7 +5,6 @@ public class SetScore implements Scorable, Displayable {
     private GameScore currentGame;
     private boolean setOver;
     private int setWinner; // Team.TEAM_A, Team.TEAM_B
-    private int tiebreakWinnerScore;
     private boolean wasTiebreak;
 
     public SetScore() {
