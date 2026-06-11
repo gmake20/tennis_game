@@ -2,10 +2,11 @@ package tennis_game;
 
 import java.io.*;
 import java.util.*;
+import java.util.stream.Stream;
 
 public class RecordStorage {
     private static final String RESULTS_FILE = "results.txt";
-
+    
     public void saveMatch(Match match) {
         try (FileWriter fw = new FileWriter(RESULTS_FILE, true)) {
             fw.write(match.toRecord());
@@ -45,5 +46,34 @@ public class RecordStorage {
             // 파일 없으면 빈 목록 반환
         }
         return records;
+    }
+    
+    //경기에 참여했던 선수들만 반환.
+    public List<String> recordedPlayers() {
+    	List<String> playerList = new ArrayList<String>();
+    	 try (BufferedReader br = new BufferedReader(new FileReader(RESULTS_FILE))) {
+             String line;
+             Map<String, String> block = new LinkedHashMap<>();
+             while ((line = br.readLine()) != null) {
+                 if (line.equals("---")) {
+                     String[] team1 = block.getOrDefault("TEAM1", "").split("\s/\s");
+                     String[] team2 = block.getOrDefault("TEAM2", "").split("\s/\s");
+                     int index =0;
+                     while(index<team1.length) {
+                    	  playerList.add(team1[index]);
+                    	  playerList.add(team2[index]);
+                    	  index++;
+                     }
+                     block.clear();
+                 } else if (line.contains("=")) {
+                     String[] kv = line.split("=", 2);
+                     block.put(kv[0], kv[1]);
+                 }
+             }
+             playerList = playerList.stream().distinct().toList();
+         } catch (IOException ignored) {
+             // 파일 없으면 빈 목록 반환
+         }
+    	return playerList;
     }
 }
