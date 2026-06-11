@@ -57,9 +57,17 @@ classDiagram
     }
 
     class RecordStorage {
+        <<interface>>
+        +saveMatch(match : Match) void
+        +findByPlayer(name : String) List~String[]~
+        +recordedPlayers() List~String~
+    }
+
+    class FileRecordStorage {
         -String RESULTS_FILE
         +saveMatch(match : Match) void
         +findByPlayer(name : String) List~String[]~
+        +recordedPlayers() List~String~
     }
 
     %% ──────────────── Entry Point ────────────────
@@ -159,9 +167,10 @@ classDiagram
     Displayable <|.. GameScore      : implements
     Displayable <|.. SetScore       : implements
     Displayable <|.. Match          : implements
-    GameInput   <|.. ConsoleInput   : implements
-    GameOutput  <|.. ConsoleOutput  : implements
-    TennisManager --> RecordStorage : uses
+    GameInput   <|.. ConsoleInput        : implements
+    GameOutput  <|.. ConsoleOutput       : implements
+    RecordStorage <|.. FileRecordStorage : implements
+    TennisManager --> RecordStorage      : uses
     TennisManager --> GameInput     : uses
     TennisManager --> GameOutput    : uses
 
@@ -209,14 +218,24 @@ classDiagram
 
 ---
 
-### `RecordStorage`
-- 파일 읽기/쓰기만 전담하는 단일 책임 클래스
-- `TennisManager`가 주입받아 사용
+### `RecordStorage` (interface)
+- 경기 기록 저장/조회의 공통 규약
+- `TennisManager`가 인터페이스 타입으로 주입받아 사용 (파일/DB 등 구현체 교환 가능)
+
+| 메서드 | 설명 |
+|---|---|
+| `saveMatch(match)` | 경기 결과 저장 |
+| `findByPlayer(name)` | 특정 선수가 참가한 기록 목록 반환 |
+| `recordedPlayers()` | 경기 기록에 존재하는 선수 이름 목록 반환 |
+
+### `FileRecordStorage`
+- `RecordStorage` 구현체 — `results.txt` 파일 기반 읽기/쓰기 전담
 
 | 메서드 | 설명 |
 |---|---|
 | `saveMatch(match)` | 경기 결과를 `results.txt`에 누적 저장 |
 | `findByPlayer(name)` | 파일을 파싱해 특정 선수가 참가한 기록 목록 반환 |
+| `recordedPlayers()` | 파일을 파싱해 경기에 참여한 선수 이름 목록 반환 (중복 제거) |
 
 ---
 
