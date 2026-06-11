@@ -89,7 +89,7 @@ public class Match implements Scorable, Displayable {
             String pointStr = currentSet.wasTiebreak()
                     ? String.valueOf(game.getRawPoint(team))
                     : game.getPointDisplay(team);
-            sb.append(String.format("%-28s  %2d    %2d    %s%n",
+            sb.append(String.format("%2d   %3d   %s%n",
                     teams[t].getDisplayName(), setsWon[t], setGames[t], pointStr));
         }
 
@@ -118,7 +118,7 @@ public class Match implements Scorable, Displayable {
 
         String label = matchType.equals("복식") ? "팀" : "선수";
         StringBuilder header = new StringBuilder();
-        header.append(String.format("%-28s  세트", label));
+        header.append(String.format("\t\t\t\t승수", label));
         for (int i = 0; i < completedSets; i++) {
             header.append(String.format("   %d세트", i + 1));
         }
@@ -133,10 +133,10 @@ public class Match implements Scorable, Displayable {
                 if (setHistory[s].wasTiebreak()) {
                     int tbScore = setHistory[s].getTiebreakWinnerScore();
                     cell = (t == setHistory[s].getWinner())
-                            ? "  7   "
-                            : String.format("  6(%d)", tbScore);
+                            ? String.format("  7(%d)", tbScore)
+                            : String.format("  6(%d)", tbScore-2);
                 } else {
-                    cell = String.format("  %2d  ", g[t]);
+                    cell = String.format("    %2d  ", g[t]);
                 }
                 row.append(cell);
             }
