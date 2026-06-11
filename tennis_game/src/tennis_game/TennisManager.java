@@ -48,7 +48,7 @@ public class TennisManager {
 
         Match match = new Match(totalSets, matchType, teams);
         output.showMessage("\n경기를 시작합니다...");
-        match.simulate();
+        match.simulate(input);
         output.showScoreBoard(match.dispScoreBoard());
 
         matchHistory.add(match);

@@ -7,7 +7,7 @@ public class Match implements Scorable, Displayable {
     private int setsToWin;
     private String matchType;
     private Team[] teams;
-    private int[] setsWon = {0, 0};
+    private int[] setsWon = { 0, 0 };
     private SetScore[] setHistory;
     private SetScore currentSet;
     private boolean matchOver;
@@ -27,7 +27,8 @@ public class Match implements Scorable, Displayable {
 
     @Override
     public void pointWinner(int p) {
-        if (matchOver) return;
+        if (matchOver)
+            return;
         currentSet.pointWinner(p);
         if (currentSet.isOver()) {
             if (currentSet.wasTiebreak()) {
@@ -44,10 +45,19 @@ public class Match implements Scorable, Displayable {
         }
     }
 
-    public void simulate() {
+    public void simulate(GameInput input) {
         while (!matchOver) {
+
+            // TODO : 1,2 대신에 TEAM_A, TEAM_B로 변경할것
+
             int p = Math.random() < 0.5 ? 1 : 2;
             pointWinner(p);
+
+            // TODO : 경기 결과 표시
+
+            if (!matchOver) {
+                input.waitForContinue();
+            }
         }
     }
 
@@ -158,12 +168,12 @@ public class Match implements Scorable, Displayable {
     private String buildScoreString() {
         StringBuilder sb = new StringBuilder();
         for (int s = 0; s < completedSets; s++) {
-            if (s > 0) sb.append(",");
+            if (s > 0)
+                sb.append(",");
             int[] g = setHistory[s].getGames();
             if (setHistory[s].wasTiebreak()) {
-                int loserTb = setHistory[s].getWinner() == 1 ?
-                        setHistory[s].getCurrentGame().getRawPoint(2) :
-                        setHistory[s].getCurrentGame().getRawPoint(1);
+                int loserTb = setHistory[s].getWinner() == 1 ? setHistory[s].getCurrentGame().getRawPoint(2)
+                        : setHistory[s].getCurrentGame().getRawPoint(1);
                 sb.append("7-6(").append(loserTb).append(")");
             } else {
                 sb.append(g[0]).append("-").append(g[1]);
@@ -172,8 +182,19 @@ public class Match implements Scorable, Displayable {
         return sb.toString();
     }
 
-    public String getDate() { return date; }
-    public String getMatchType() { return matchType; }
-    public Team[] getTeams() { return teams; }
-    public int[] getSetsWon() { return setsWon; }
+    public String getDate() {
+        return date;
+    }
+
+    public String getMatchType() {
+        return matchType;
+    }
+
+    public Team[] getTeams() {
+        return teams;
+    }
+
+    public int[] getSetsWon() {
+        return setsWon;
+    }
 }

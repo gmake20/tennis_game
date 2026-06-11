@@ -55,4 +55,14 @@ public class ConsoleInput implements GameInput {
         System.out.print("조회할 선수 이름을 입력하세요: ");
         return scanner.nextLine().trim();
     }
+
+    @Override
+    public void waitForContinue() {
+        System.out.println("Press Enter to continue...");
+        try {
+            System.in.read();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
