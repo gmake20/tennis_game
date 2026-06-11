@@ -381,3 +381,36 @@ WINNER=Nadal
 - 세트가 끝나면 현재 세트의 게임 스코어를 초기화하고 다음 세트를 시작합니다.
 - 타이브레이크가 끝나면 해당 세트를 종료합니다.
 - 경기 결과는 `results.txt`에 누적 저장되며, 조회 시 해당 파일을 읽어 선수 이름으로 필터링합니다.
+
+
+## 추가 설명
+
+- 게임점수 획득시 처리
+simulate() → pointWinner(p)
+                └─ currentSet.pointWinner(p)
+                        │
+                   currentSet.isOver() == true (세트 종료)
+                        │
+                   setsWon[winner]++
+                        │
+                   setsWon >= setsToWin ?
+                        ├─ YES → matchOver = true  ← 여기서 발생
+                        └─ NO  → currentSet = new SetScore() (다음 세트 시작)
+
+
+듀스와 gameScore 에서 checkWin()함수가 처리하고,                
+getPointDisplay()에서 듀스에 대한 출력을 표시함.
+
+- 타이브레이크
+게임 스코어가 6-6 도달
+    │
+    └─ SetScore.checkTiebreak()
+            └─ currentGame = new GameScore(true)  ← isTiebreak=true로 생성
+                    │
+                    포인트 추가 반복
+                    │
+              GameScore.checkWin()
+              7점 이상 AND 2점 차 → 게임 종료
+                    │
+              SetScore: games → 7-6
+              checkSetWin() → setOver = true
