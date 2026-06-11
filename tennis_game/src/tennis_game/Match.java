@@ -48,7 +48,7 @@ public class Match implements Scorable, Displayable {
     public void simulate(GameInput input) {
         while (!matchOver) {
 
-            // TODO : 1,2 대신에 TEAM_A, TEAM_B로 변경할것
+            // TODO : 1,2 대신에 TEAM_A, TEAM_B로 변경할것 : 수정완료함 (신창만)
 
             int p = Math.random() < 0.5 ? Team.TEAM_A : Team.TEAM_B;
             pointWinner(p);
