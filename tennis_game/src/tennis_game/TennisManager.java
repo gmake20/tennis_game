@@ -13,7 +13,7 @@ public class TennisManager {
 
 	public TennisManager(GameInput input, GameOutput output) {
 		storage = new FileRecordStorage();
-				
+
 		this.input = input;
 		this.output = output;
 		playerRoster.add(new Player("양인석"));
@@ -92,9 +92,9 @@ public class TennisManager {
 	}
 
 	private void queryPlayerRecord() {
-
 		// TODO : 선수 이름 목록 보여주기
-		List<String> recordedPlayersList = storage.recordedPlayers();
+		RecordStorage str = storage;
+		List<String> recordedPlayersList = str.recordedPlayers();
 		Iterator<String> isPL = recordedPlayersList.iterator();
 		int n = 1;
 		while (isPL.hasNext()) {
@@ -105,6 +105,13 @@ public class TennisManager {
 		System.out.println();
 
 		String name = input.readPlayerName();
+		int i = -1;
+		try {
+			i = Integer.parseInt(name);
+		} catch (NumberFormatException e) {
+
+		}
+		name = (i != -1 && i<=recordedPlayersList.size()) ? recordedPlayersList.get(i-1) : name;
 		List<String[]> records = storage.findByPlayer(name);
 		output.showPlayerRecords(name, records);
 	}
