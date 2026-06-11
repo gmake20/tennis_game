@@ -45,16 +45,13 @@ public class Match implements Scorable, Displayable {
         }
     }
 
-    public void simulate(GameInput input) {
+    public void simulate(GameInput input, GameOutput output) {
         while (!matchOver) {
-
-            // TODO : 1,2 대신에 TEAM_A, TEAM_B로 변경할것 : 수정완료함 (신창만)
-
+        	// TODO Finish : 1,2 대신에 TEAM_A, TEAM_B로 변경할것 : 수정완료함 (신창만)
             int p = Math.random() < 0.5 ? Team.TEAM_A : Team.TEAM_B;
             pointWinner(p);
-
-            // TODO : 경기 결과 표시
-
+            // TODO Finish: 경기 결과 표시 : 수정완료함 (신창만)
+            output.showScoreBoard(dispScoreBoard());
             if (!matchOver) {
                 input.waitForContinue();
             }
@@ -72,7 +69,7 @@ public class Match implements Scorable, Displayable {
     }
 
     @Override
-    public String dispScoreBoard() {
+	public String dispScoreBoard() {
         if (matchOver) {
             return display();
         }
@@ -88,7 +85,7 @@ public class Match implements Scorable, Displayable {
 
         sb.append(String.format("%-28s  세트  게임  현재 게임 포인트%n", label));
         for (int t = 0; t < 2; t++) {
-            int team = t + 1;
+            int team = t;
             String pointStr = currentSet.wasTiebreak()
                     ? String.valueOf(game.getRawPoint(team))
                     : game.getPointDisplay(team);
