@@ -90,6 +90,9 @@ public class TennisManager {
     }
 
     private void queryPlayerRecord() {
+        
+        // TODO : 선수 이름 목록 보여주기
+
         String name = input.readPlayerName();
         List<String[]> records = storage.findByPlayer(name);
         output.showPlayerRecords(name, records);

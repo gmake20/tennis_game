@@ -35,10 +35,10 @@ public class Match implements Scorable, Displayable {
                 currentSet.setTiebreakWinnerScore(currentSet.getCurrentGame().getRawPoint(currentSet.getWinner()));
             }
             setHistory[completedSets++] = currentSet;
-            setsWon[currentSet.getWinner() - 1]++;
+            setsWon[currentSet.getWinner()]++;
             if (setsWon[0] >= setsToWin || setsWon[1] >= setsToWin) {
                 matchOver = true;
-                winner = setsWon[0] >= setsToWin ? 1 : 2;
+                winner = setsWon[0] >= setsToWin ? Team.TEAM_A : Team.TEAM_B;
             } else {
                 currentSet = new SetScore();
             }
@@ -50,7 +50,7 @@ public class Match implements Scorable, Displayable {
 
             // TODO : 1,2 대신에 TEAM_A, TEAM_B로 변경할것
 
-            int p = Math.random() < 0.5 ? 1 : 2;
+            int p = Math.random() < 0.5 ? Team.TEAM_A : Team.TEAM_B;
             pointWinner(p);
 
             // TODO : 경기 결과 표시

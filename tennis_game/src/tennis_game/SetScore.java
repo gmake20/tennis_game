@@ -4,7 +4,7 @@ public class SetScore implements Scorable, Displayable {
     private int[] games = {0, 0};
     private GameScore currentGame;
     private boolean setOver;
-    private int setWinner;
+	private int setWinner;	// Team.TEAM_A, Team.TEAM_B
     private int tiebreakWinnerScore;
     private boolean wasTiebreak;
 
@@ -14,10 +14,11 @@ public class SetScore implements Scorable, Displayable {
 
     @Override
     public void pointWinner(int p) {
+    	
         if (setOver) return;
         currentGame.pointWinner(p);
         if (currentGame.isOver()) {
-            games[currentGame.getWinner() - 1]++;
+            games[currentGame.getWinner()]++;
             checkSetWin();
             if (!setOver) {
                 nextGame();
@@ -26,16 +27,16 @@ public class SetScore implements Scorable, Displayable {
     }
 
     private void checkSetWin() {
-        int g0 = games[0], g1 = games[1];
+        int g0 = games[Team.TEAM_A], g1 = games[Team.TEAM_B];
         if ((g0 >= 6 || g1 >= 6) && Math.abs(g0 - g1) >= 2) {
             setOver = true;
-            setWinner = g0 > g1 ? 1 : 2;
+            setWinner = g0 > g1 ? Team.TEAM_A : Team.TEAM_B;
         } else if (g0 == 7 && g1 == 6) {
             setOver = true;
-            setWinner = 1;
+            setWinner = Team.TEAM_A;
         } else if (g1 == 7 && g0 == 6) {
             setOver = true;
-            setWinner = 2;
+            setWinner = Team.TEAM_B;
         }
     }
 
@@ -84,7 +85,7 @@ public class SetScore implements Scorable, Displayable {
 
     @Override
     public String dispScoreBoard() {
-        return String.format("[세트 스코어]  %d - %d%n", games[0], games[1])
+        return String.format("[세트 스코어]  %d - %d%n", games[Team.TEAM_A], games[Team.TEAM_B])
                 + currentGame.dispScoreBoard();
     }
 

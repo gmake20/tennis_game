@@ -1,6 +1,10 @@
 package tennis_game;
 
 public class Team {
+
+    public static final int TEAM_A = 0;
+    public static final int TEAM_B = 1;
+
     private Player[] players;
     private String matchType;
 
@@ -11,9 +15,9 @@ public class Team {
 
     public String getDisplayName() {
         if (matchType.equals("복식")) {
-            return players[0].getName() + " / " + players[1].getName();
+            return players[TEAM_A].getName() + " / " + players[TEAM_B].getName();
         }
-        return players[0].getName();
+        return players[TEAM_A].getName();
     }
 
     public Player[] getPlayers() {

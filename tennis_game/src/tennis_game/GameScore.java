@@ -13,20 +13,20 @@ public class GameScore implements Scorable, Displayable {
     @Override
     public void pointWinner(int p) {
         if (gameOver) return;
-        points[p - 1]++;
+        points[p]++;
         checkWin();
     }
 
     private void checkWin() {
         if (isTiebreak) {
-            if ((points[0] >= 7 || points[1] >= 7) && Math.abs(points[0] - points[1]) >= 2) {
+            if ((points[Team.TEAM_A] >= 7 || points[Team.TEAM_B] >= 7) && Math.abs(points[Team.TEAM_A] - points[Team.TEAM_B]) >= 2) {
                 gameOver = true;
-                gameWinner = points[0] > points[1] ? 1 : 2;
+                gameWinner = points[Team.TEAM_A] > points[Team.TEAM_B] ? Team.TEAM_A : Team.TEAM_B;
             }
         } else {
-            if ((points[0] >= 4 || points[1] >= 4) && Math.abs(points[0] - points[1]) >= 2) {
+            if ((points[Team.TEAM_A] >= 4 || points[Team.TEAM_B] >= 4) && Math.abs(points[Team.TEAM_A] - points[Team.TEAM_B]) >= 2) {
                 gameOver = true;
-                gameWinner = points[0] > points[1] ? 1 : 2;
+                gameWinner = points[Team.TEAM_A] > points[Team.TEAM_B] ? Team.TEAM_A : Team.TEAM_B;
             }
         }
     }
@@ -42,20 +42,19 @@ public class GameScore implements Scorable, Displayable {
     }
 
     public boolean isDeuceState() {
-        return !isTiebreak && points[0] >= 3 && points[1] >= 3 && points[0] == points[1];
+        return !isTiebreak && points[Team.TEAM_A] >= 3 && points[Team.TEAM_B] >= 3 && points[Team.TEAM_A] == points[Team.TEAM_B];
     }
 
     public int getAdvantageTeam() {
-        if (!isTiebreak && points[0] >= 3 && points[1] >= 3 && Math.abs(points[0] - points[1]) == 1) {
-            return points[0] > points[1] ? 1 : 2;
+        if (!isTiebreak && points[team] >= 3 && points[Team.TEAM_B] >= 3 && Math.abs(points[team] - points[Team.TEAM_B]) == 1) {
+            return points[team] > points[Team.TEAM_B] ? team : Team.TEAM_B;
         }
         return 0;
-    }
+    }   
 
     public String getPointDisplay(int team) {
-        int idx = team - 1;
-        if (isTiebreak) {
-            return String.valueOf(points[idx]);
+        if (isTiebreak) {  
+            return String.valueOf(points[team]);
         }
         if (isDeuceState()) {
             return "40";
@@ -64,30 +63,30 @@ public class GameScore implements Scorable, Displayable {
         if (adv != 0) {
             return adv == team ? "Adv" : "40";
         }
-        switch (points[idx]) {
+        switch (points[team]) {
             case 0: return "0";
             case 1: return "15";
             case 2: return "30";
             case 3: return "40";
-            default: return String.valueOf(points[idx]);
+            default: return String.valueOf(points[team]);
         }
     }
 
     public int getRawPoint(int team) {
-        return points[team - 1];
+        return points[team];
     }
 
     @Override
     public String dispScoreBoard() {
         StringBuilder sb = new StringBuilder("[현재 게임 포인트]  ");
         if (isTiebreak) {
-            sb.append(String.format("%d - %d  (Tie-break)%n", points[0], points[1]));
+            sb.append(String.format("%d - %d  (Tie-break)%n", points[Team.TEAM_A], points[Team.TEAM_B]));
         } else if (isDeuceState()) {
             sb.append("Deuce\n");
         } else if (getAdvantageTeam() != 0) {
-            sb.append(getAdvantageTeam() == 1 ? "Adv - 40\n" : "40 - Adv\n");
+            sb.append(getAdvantageTeam() == Team.TEAM_A ? "Adv - 40\n" : "40 - Adv\n");
         } else {
-            sb.append(String.format("%s - %s%n", getPointDisplay(1), getPointDisplay(2)));
+            sb.append(String.format("%s - %s%n", getPointDisplay(Team.TEAM_A), getPointDisplay(Team.TEAM_B)));
         }
         return sb.toString();
     }
