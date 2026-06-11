@@ -19,10 +19,10 @@ classDiagram
         +display() void
     }
 
-    class FileStorable {
-        <<interface>>
-        +saveToFile() void
-        +loadFromFile() void
+    class RecordStorage {
+        -String RESULTS_FILE
+        +saveMatch(match : Match) void
+        +findByPlayer(name : String) List~String[]~
     }
 
     %% ──────────────── Entry Point ────────────────
@@ -91,6 +91,8 @@ classDiagram
         +pointWinner(p : int) void
         +isOver() boolean
         +getWinner() int
+        +dispScoreBoard() void
+        +display() void
         +getGames() int[]
         -nextGame() void
         -checkTiebreak() void
@@ -106,7 +108,10 @@ classDiagram
         +pointWinner(p : int) void
         +isOver() boolean
         +getWinner() int
-        +getPointDisplay() String
+        +dispScoreBoard() void
+        +display() void
+        +getPointDisplay(team : int) String
+        +getRawPoint(team : int) int
         -isDeuceState() boolean
         -getAdvantageTeam() int
     }
@@ -115,8 +120,10 @@ classDiagram
     Scorable    <|.. GameScore      : implements
     Scorable    <|.. SetScore       : implements
     Scorable    <|.. Match          : implements
+    Displayable <|.. GameScore      : implements
+    Displayable <|.. SetScore       : implements
     Displayable <|.. Match          : implements
-    FileStorable <|.. TennisManager : implements
+    TennisManager --> RecordStorage : uses
 
     %% ──────────────── 클래스 간 관계 ────────────────
     TennisApp   -->  TennisManager  : uses
@@ -135,8 +142,7 @@ classDiagram
 | 인터페이스 | 구현 클래스 | 역할 |
 |---|---|---|
 | `Scorable` | `GameScore`, `SetScore`, `Match` | 포인트 득점 처리 및 승리 판정의 공통 규약 |
-| `Displayable` | `Match` | 스코어보드 출력 규약 |
-| `FileStorable` | `TennisManager` | 결과 파일 저장/불러오기 규약 |
+| `Displayable` | `GameScore`, `SetScore`, `Match` | 각 계층의 스코어 상태 출력 규약 |
 
 ---
 
@@ -150,16 +156,25 @@ classDiagram
 - 전체 흐름 제어 (메뉴, 경기 생성, 기록 조회)
 - 10명의 사전 등록 선수 목록(`playerRoster`) 관리
 - 완료된 경기 이력(`matchHistory`) 관리
-- 경기 결과 파일 저장/불러오기 (`FileStorable` 구현)
+- 파일 I/O는 `RecordStorage`에 위임
 
 | 메서드 | 설명 |
 |---|---|
 | `run()` | 메인 메뉴 루프 실행 |
-| `startNewMatch()` | 세트 수·단복식·선수 선택 → Match 생성 → 시뮬레이션 |
-| `queryPlayerRecord()` | 선수 이름 입력 → 파일에서 기록 검색 후 출력 |
+| `startNewMatch()` | 세트 수·단복식·선수 선택 → Match 생성 → 시뮬레이션 → `storage.saveMatch()` 호출 |
+| `queryPlayerRecord()` | 선수 이름 입력 → `storage.findByPlayer()` 결과 출력 |
 | `selectTeams()` | 단식(2명) / 복식(4명) 선수 선택, 중복 방지 |
-| `saveToFile()` | 경기 결과를 `results.txt`에 누적 저장 |
-| `loadFromFile()` | `results.txt`를 읽어 기록 조회 |
+
+---
+
+### `RecordStorage`
+- 파일 읽기/쓰기만 전담하는 단일 책임 클래스
+- `TennisManager`가 주입받아 사용
+
+| 메서드 | 설명 |
+|---|---|
+| `saveMatch(match)` | 경기 결과를 `results.txt`에 누적 저장 |
+| `findByPlayer(name)` | 파일을 파싱해 특정 선수가 참가한 기록 목록 반환 |
 
 ---
 
@@ -231,7 +246,7 @@ classDiagram
 
 ---
 
-## 점수 처리 위임 흐름
+## 점수 처리 위임 흐름 (pointWinner)
 
 ```
 TennisManager.startNewMatch()
@@ -255,7 +270,20 @@ TennisManager.startNewMatch()
                                     │
                             Match.isOver() == true
                                     │
-                            Match.display() + TennisManager.saveToFile()
+                            RecordStorage.saveMatch()
+```
+
+## 출력 위임 흐름 (dispScoreBoard)
+
+```
+Match.dispScoreBoard()                   ← 팀명 포함 전체 스코어보드
+    │  (matchOver == true → display() 위임)
+    │
+    SetScore.dispScoreBoard()            ← [세트 스코어]  4 - 2
+        │  (위임 호출)
+        │
+        GameScore.dispScoreBoard()       ← [현재 게임 포인트]  40 - 30
+                                            Deuce / Adv - 40 / 5 - 3 (Tie-break)
 ```
 
 ---
