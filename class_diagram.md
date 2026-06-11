@@ -16,7 +16,44 @@ classDiagram
 
     class Displayable {
         <<interface>>
-        +display() void
+        +dispScoreBoard() String
+        +display() String
+    }
+
+    class GameInput {
+        <<interface>>
+        +readMenuChoice() int
+        +readTotalSets() int
+        +readMatchType() String
+        +readPlayerIndex(prompt : String, used : Set) int
+        +readPlayerName() String
+    }
+
+    class GameOutput {
+        <<interface>>
+        +showMenu() void
+        +showMessage(msg : String) void
+        +showRoster(playerNames : List) void
+        +showScoreBoard(text : String) void
+        +showPlayerRecords(name : String, records : List) void
+    }
+
+    %% ──────────────── Console 구현체 ────────────────
+    class ConsoleInput {
+        -Scanner scanner
+        +readMenuChoice() int
+        +readTotalSets() int
+        +readMatchType() String
+        +readPlayerIndex(prompt : String, used : Set) int
+        +readPlayerName() String
+    }
+
+    class ConsoleOutput {
+        +showMenu() void
+        +showMessage(msg : String) void
+        +showRoster(playerNames : List) void
+        +showScoreBoard(text : String) void
+        +showPlayerRecords(name : String, records : List) void
     }
 
     class RecordStorage {
@@ -32,17 +69,16 @@ classDiagram
 
     %% ──────────────── Manager ────────────────
     class TennisManager {
+        -GameInput input
+        -GameOutput output
         -List~Player~ playerRoster
         -List~Match~ matchHistory
-        +TennisManager()
+        +TennisManager(input : GameInput, output : GameOutput)
         +run() void
-        -showMenu() int
         -startNewMatch() void
         -queryPlayerRecord() void
         -selectTeams() Team[]
-        -printRoster() void
-        +saveToFile() void
-        +loadFromFile() void
+        -pickPlayer() Player
     }
 
     %% ──────────────── Player / Team ────────────────
@@ -123,10 +159,16 @@ classDiagram
     Displayable <|.. GameScore      : implements
     Displayable <|.. SetScore       : implements
     Displayable <|.. Match          : implements
+    GameInput   <|.. ConsoleInput   : implements
+    GameOutput  <|.. ConsoleOutput  : implements
     TennisManager --> RecordStorage : uses
+    TennisManager --> GameInput     : uses
+    TennisManager --> GameOutput    : uses
 
     %% ──────────────── 클래스 간 관계 ────────────────
-    TennisApp   -->  TennisManager  : uses
+    TennisApp   -->  TennisManager  : creates
+    TennisApp   -->  ConsoleInput   : creates
+    TennisApp   -->  ConsoleOutput  : creates
     TennisManager "1" *-- "*"  Match  : manages
     TennisManager "1" o-- "10" Player : roster
     Match       "1" *-- "2"   Team    : has
