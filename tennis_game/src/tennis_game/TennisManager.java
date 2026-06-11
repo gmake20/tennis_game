@@ -45,7 +45,7 @@ public class TennisManager {
 
 	private void startNewMatch() {
 		int totalSets = input.readTotalSets();
-		String matchType = input.readMatchType();
+		MatchType matchType = input.readMatchType();
 		Team[] teams = selectTeams(matchType);
 
 		Match match = new Match(totalSets, matchType, teams);
@@ -57,14 +57,14 @@ public class TennisManager {
 		storage.saveMatch(match);
 	}
 
-	private Team[] selectTeams(String matchType) {
+	private Team[] selectTeams(MatchType matchType) {
 		List<String> names = playerRoster.stream()
 				.map(Player::getName)
 				.collect(Collectors.toList());
 		output.showRoster(names);
 		Set<Integer> used = new HashSet<>();
 
-		if (matchType.equals("단식")) {
+		if (matchType == MatchType.SINGLES) {
 			Player p1 = pickPlayer("선수 1 선택 (번호 입력): ", used);
 			Player p2 = pickPlayer("선수 2 선택 (번호 입력): ", used);
 			return new Team[]{

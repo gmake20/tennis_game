@@ -28,12 +28,12 @@ public class ConsoleInput implements GameInput {
     }
 
     @Override
-    public String readMatchType() {
+    public MatchType readMatchType() {
         System.out.print("경기 유형을 선택하세요 (1: 단식 / 2: 복식): ");
         while (true) {
             String line = scanner.nextLine().trim();
-            if (line.equals("1")) return "단식";
-            if (line.equals("2")) return "복식";
+            if (line.equals("1")) return MatchType.SINGLES;
+            if (line.equals("2")) return MatchType.DOUBLES;
             System.out.print("1 또는 2를 입력하세요: ");
         }
     }
@@ -58,11 +58,11 @@ public class ConsoleInput implements GameInput {
 
     @Override
     public void waitForContinue() {
-        System.out.println("Press Enter to continue...");
-        try {
-            System.in.read();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        System.out.println("Press Enter to continue...");
+//        try {
+//            System.in.read();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 }

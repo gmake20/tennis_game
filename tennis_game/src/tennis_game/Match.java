@@ -3,19 +3,19 @@ package tennis_game;
 import java.time.LocalDate;
 
 public class Match implements Scorable, Displayable {
-    private int totalSets;          // 경기 세트 수. 사용자가 선택한 3 또는 5
-    private int setsToWin;          // 승리에 필요한 세트 수. totalSets / 2 + 1 로 계산 (3세트면 2, 5세트면 3)
-    private String matchType;       // 경기 방식. "단식" 또는 "복식"
-    private Team[] teams;             // 참가 팀. 단식: Team[2], 복식: Team[2]  
+    private int totalSets; // 경기 세트 수. 사용자가 선택한 3 또는 5
+    private int setsToWin; // 승리에 필요한 세트 수. totalSets / 2 + 1 로 계산 (3세트면 2, 5세트면 3)
+    private MatchType matchType; // 경기 방식. SINGLES 또는 DOUBLES
+    private Team[] teams; // 참가 팀. 단식: Team[2], 복식: Team[2]
     private int[] setsWon = { 0, 0 }; // 각 팀의 세트 승리 횟수
-    private SetScore[] setHistory;    // 세트 결과 기록 배열
-    private SetScore currentSet;      // 현재 진행 중인 세트
-    private boolean matchOver;        // 경기 종료 여부
-    private int winner;               // 최종 승자 Team.TEAM_A 또는 Team.TEAM_B
-    private String date;              // 경기 날짜
-    private int completedSets;        // 완료된 세트 수
+    private SetScore[] setHistory; // 세트 결과 기록 배열
+    private SetScore currentSet; // 현재 진행 중인 세트
+    private boolean matchOver; // 경기 종료 여부
+    private int winner; // 최종 승자 Team.TEAM_A 또는 Team.TEAM_B
+    private String date; // 경기 날짜
+    private int completedSets; // 완료된 세트 수
 
-    public Match(int totalSets, String matchType, Team[] teams) {
+    public Match(int totalSets, MatchType matchType, Team[] teams) {
         this.totalSets = totalSets;
         this.setsToWin = totalSets / 2 + 1;
         this.matchType = matchType;
@@ -44,10 +44,8 @@ public class Match implements Scorable, Displayable {
 
     public void simulate(GameInput input, GameOutput output) {
         while (!matchOver) {
-            // TODO Finish : 1,2 대신에 TEAM_A, TEAM_B로 변경할것 : 수정완료함 (신창만)
             int p = Math.random() < 0.5 ? Team.TEAM_A : Team.TEAM_B;
             pointWinner(p);
-            // TODO Finish: 경기 결과 표시 : 수정완료함 (신창만)
             output.showScoreBoard(dispScoreBoard());
             if (!matchOver) {
                 input.waitForContinue();
@@ -76,7 +74,7 @@ public class Match implements Scorable, Displayable {
         sb.append("현재 스코어보드\n");
         sb.append(String.format("경기 방식: %d세트 %s%n%n", totalSets, matchType));
 
-        String label = matchType.equals("복식") ? "팀" : "선수";
+        String label = matchType == MatchType.DOUBLES ? "팀" : "선수";
         GameScore game = currentSet.getCurrentGame();
         int[] setGames = currentSet.getGames();
 
@@ -113,7 +111,7 @@ public class Match implements Scorable, Displayable {
         sb.append("경기 종료\n");
         sb.append(String.format("경기 방식: %d세트 %s%n%n", totalSets, matchType));
 
-        String label = matchType.equals("복식") ? "팀" : "선수";
+        String label = matchType == MatchType.DOUBLES ? "팀" : "선수";
         StringBuilder header = new StringBuilder();
         header.append(String.format("%s 1\t\t\t\t승수", label));
         for (int i = 0; i < completedSets; i++) {
@@ -180,7 +178,7 @@ public class Match implements Scorable, Displayable {
         return date;
     }
 
-    public String getMatchType() {
+    public MatchType getMatchType() {
         return matchType;
     }
 

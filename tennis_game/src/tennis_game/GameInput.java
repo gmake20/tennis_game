@@ -5,7 +5,7 @@ import java.util.Set;
 public interface GameInput {
     int readMenuChoice();
     int readTotalSets();
-    String readMatchType();
+    MatchType readMatchType();
     int readPlayerIndex(String prompt, Set<Integer> used);
     String readPlayerName();
     void waitForContinue();
