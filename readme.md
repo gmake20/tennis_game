@@ -385,7 +385,9 @@ WINNER=Nadal
 
 ## 추가 설명
 
-- 게임점수 획득시 처리
+### 게임점수 획득시 처리
+
+```
 simulate() → pointWinner(p)
                 └─ currentSet.pointWinner(p)
                         │
@@ -396,12 +398,13 @@ simulate() → pointWinner(p)
                    setsWon >= setsToWin ?
                         ├─ YES → matchOver = true  ← 여기서 발생
                         └─ NO  → currentSet = new SetScore() (다음 세트 시작)
+```
 
+듀스는 `GameScore.checkWin()`에서 처리하고, `getPointDisplay()`에서 듀스에 대한 출력을 표시함.
 
-듀스와 gameScore 에서 checkWin()함수가 처리하고,                
-getPointDisplay()에서 듀스에 대한 출력을 표시함.
+### 타이브레이크
 
-- 타이브레이크
+```
 게임 스코어가 6-6 도달
     │
     └─ SetScore.checkTiebreak()
@@ -414,3 +417,4 @@ getPointDisplay()에서 듀스에 대한 출력을 표시함.
                     │
               SetScore: games → 7-6
               checkSetWin() → setOver = true
+```
