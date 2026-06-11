@@ -43,12 +43,15 @@ public class Match implements Scorable, Displayable {
     }
 
     public void simulate(GameInput input, GameOutput output) {
+        boolean stepMode = true;
         while (!matchOver) {
             int p = Math.random() < 0.5 ? Team.TEAM_A : Team.TEAM_B;
             pointWinner(p);
-            output.showScoreBoard(dispScoreBoard());
-            if (!matchOver) {
-                input.waitForContinue();
+            if (stepMode) {
+                output.showScoreBoard(dispScoreBoard());
+                if (!matchOver) {
+                    stepMode = input.waitForContinue();
+                }
             }
         }
     }

@@ -8,5 +8,5 @@ public interface GameInput {
     MatchType readMatchType();
     int readPlayerIndex(String prompt, Set<Integer> used);
     String readPlayerName();
-    void waitForContinue();
+    boolean waitForContinue();
 }
