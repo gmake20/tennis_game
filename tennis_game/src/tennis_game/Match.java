@@ -48,11 +48,9 @@ public class Match implements Scorable, Displayable {
         while (!matchOver) {
             int p = Math.random() < 0.5 ? Team.TEAM_A : Team.TEAM_B;
             pointWinner(p);
-            if (stepMode) {
-                output.showScoreBoard(dispScoreBoard());
-                if (!matchOver) {
-                    stepMode = input.waitForContinue();
-                }
+            output.showScoreBoard(dispScoreBoard());
+            if (stepMode && !matchOver) {
+                stepMode = input.waitForContinue();
             }
         }
     }
