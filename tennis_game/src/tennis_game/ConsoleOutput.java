@@ -2,6 +2,7 @@ package tennis_game;
 
 import java.util.List;
 
+// 콘솔 출력을 처리하는 클래스
 public class ConsoleOutput implements GameOutput {
 
     @Override
@@ -22,7 +23,8 @@ public class ConsoleOutput implements GameOutput {
         System.out.println("\n[선수 목록]");
         for (int i = 0; i < playerNames.size(); i++) {
             System.out.printf("%2d. %-22s", i + 1, playerNames.get(i));
-            if ((i + 1) % 3 == 0) System.out.println();
+            if ((i + 1) % 3 == 0)
+                System.out.println();
         }
         System.out.println();
     }

@@ -2,6 +2,7 @@ package tennis_game;
 
 import java.time.LocalDate;
 
+// 경기 전체(세트 단위)를 관리. 세트 수를 누적하고 승리 조건 도달 시 경기 종료 처리.
 public class Match implements Scorable, Displayable {
     private int totalSets; // 경기 세트 수. 사용자가 선택한 3 또는 5
     private int setsToWin; // 승리에 필요한 세트 수. totalSets / 2 + 1 로 계산 (3세트면 2, 5세트면 3)

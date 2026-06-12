@@ -1,11 +1,12 @@
 package tennis_game;
 
+// 하나의 세트(게임 단위)를 관리. 게임 수를 누적하고 6-6 시 타이브레이크 진입 결정.
 public class SetScore implements Scorable, Displayable {
-    private int[] games = { 0, 0 };   // 각 팀의 게임 수 [TEAM_A, TEAM_B]
-    private GameScore currentGame;     // 현재 진행 중인 게임
-    private boolean setOver;           // 세트 종료 여부
-    private int setWinner;             // 세트 승자 (Team.TEAM_A 또는 Team.TEAM_B)
-    private boolean wasTiebreak;       // 이 세트가 타이브레이크로 끝났는지 여부
+    private int[] games = { 0, 0 }; // 각 팀의 게임 수 [TEAM_A, TEAM_B]
+    private GameScore currentGame; // 현재 진행 중인 게임
+    private boolean setOver; // 세트 종료 여부
+    private int setWinner; // 세트 승자 (Team.TEAM_A 또는 Team.TEAM_B)
+    private boolean wasTiebreak; // 이 세트가 타이브레이크로 끝났는지 여부
 
     public SetScore() {
         currentGame = new GameScore(false);
