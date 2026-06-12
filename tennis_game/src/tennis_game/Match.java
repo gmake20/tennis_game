@@ -27,10 +27,10 @@ public class Match implements Scorable, Displayable {
     }
 
     @Override
-    public void pointWinner(int p) {
+    public void pointWinner(int team) {
         if (matchOver)
             return;
-        currentSet.pointWinner(p);
+        currentSet.pointWinner(team);
         if (currentSet.isOver()) {
             setHistory[completedSets++] = currentSet;
             setsWon[currentSet.getWinner()]++;
@@ -46,8 +46,8 @@ public class Match implements Scorable, Displayable {
     public void simulate(GameInput input, GameOutput output) {
         boolean stepMode = true;
         while (!matchOver) {
-            int p = Math.random() < 0.5 ? Team.TEAM_A : Team.TEAM_B;
-            pointWinner(p);
+            int team = Math.random() < 0.5 ? Team.TEAM_A : Team.TEAM_B;
+            pointWinner(team);
             output.showScoreBoard(dispScoreBoard());
             if (stepMode && !matchOver) {
                 stepMode = input.waitForContinue();

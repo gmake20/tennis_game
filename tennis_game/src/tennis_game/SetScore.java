@@ -13,11 +13,11 @@ public class SetScore implements Scorable, Displayable {
     }
 
     @Override
-    public void pointWinner(int p) {
+    public void pointWinner(int team) {
 
         if (setOver)
             return;
-        currentGame.pointWinner(p);
+        currentGame.pointWinner(team);
         if (currentGame.isOver()) {
             games[currentGame.getWinner()]++;
             checkSetWin();
