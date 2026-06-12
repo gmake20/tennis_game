@@ -54,9 +54,9 @@ public class GameScore implements Scorable, Displayable {
     public int getAdvantageTeam() {
         if (!isTiebreak && points[Team.TEAM_A] >= 3 && points[Team.TEAM_B] >= 3
                 && Math.abs(points[Team.TEAM_A] - points[Team.TEAM_B]) == 1) {
-            return points[Team.TEAM_A] > points[Team.TEAM_B] ? 1 : 2;
+            return points[Team.TEAM_A] > points[Team.TEAM_B] ? Team.TEAM_A : Team.TEAM_B;
         }
-        return 0;
+        return -1;  // 어드밴티지 없음
     }
 
     public String getPointDisplay(int team) {
@@ -67,7 +67,7 @@ public class GameScore implements Scorable, Displayable {
             return "40";
         }
         int adv = getAdvantageTeam();
-        if (adv != 0) {
+        if (adv != -1) {
             return adv == team ? "Adv" : "40";
         }
         switch (points[team]) {
@@ -95,7 +95,7 @@ public class GameScore implements Scorable, Displayable {
             sb.append(String.format("%d - %d  (Tie-break)%n", points[Team.TEAM_A], points[Team.TEAM_B]));
         } else if (isDeuceState()) {
             sb.append("Deuce\n");
-        } else if (getAdvantageTeam() != 0) {
+        } else if (getAdvantageTeam() != -1) {
             sb.append(getAdvantageTeam() == Team.TEAM_A ? "Adv - 40\n" : "40 - Adv\n");
         } else {
             sb.append(String.format("%s - %s%n", getPointDisplay(Team.TEAM_A), getPointDisplay(Team.TEAM_B)));

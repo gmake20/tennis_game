@@ -97,9 +97,9 @@ public class Match implements Scorable, Displayable {
                     teams[1].getDisplayName(), game.getRawPoint(Team.TEAM_B)));
         } else if (game.isDeuceState()) {
             sb.append("현재 게임 포인트: Deuce\n");
-        } else if (game.getAdvantageTeam() != 0) {
+        } else if (game.getAdvantageTeam() != -1) {
             sb.append(String.format("현재 게임 포인트: Advantage %s%n",
-                    teams[game.getAdvantageTeam() - 1].getDisplayName()));
+                    teams[game.getAdvantageTeam()].getDisplayName()));
         }
 
         sb.append("================================\n");
